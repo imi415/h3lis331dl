@@ -31,9 +31,22 @@ typedef enum {
 } h3lis331dl_sample_rate_t;
 
 typedef enum {
+    H3LIS331DL_RANGE_100G = 0U,
+    H3LIS331DL_RANGE_200G = 1U,
+    H3LIS331DL_RANGE_400G = 2U,
+} h3lis331dl_range_t;
+
+typedef enum {
     H3LIS331DL_HPF_MODE_NORMAL = 0U,
     H3LIS331DL_HPF_MODE_REF    = 1U,
 } h3lis331dl_hpf_mode_t;
+
+typedef enum {
+    H3LIS331DL_HPCF_8  = 0U,
+    H3LIS331DL_HPCF_16 = 1U,
+    H3LIS331DL_HPCF_32 = 2U,
+    H3LIS331DL_HPCF_64 = 3U,
+} h3lis331dl_hpf_coeff_t;
 
 typedef struct {
     h3lis331dl_ret_t (*i2c_read_cb)(void *handle, uint8_t addr, uint8_t *data, uint8_t len);
@@ -44,13 +57,15 @@ typedef struct {
     h3lis331dl_power_mode_t  sample_mode;
     h3lis331dl_sample_rate_t normal_mode_sample_rate;
     h3lis331dl_hpf_mode_t    hpf_mode;
+    h3lis331dl_hpf_coeff_t   hpf_coeff;
+    h3lis331dl_range_t       range;
 } h3lis331dl_config_t;
 
 typedef struct {
-    void           *user_data;
-    uint8_t         slave_addr;
+    void               *user_data;
+    uint8_t             slave_addr;
     h3lis331dl_config_t config;
-    h3lis331dl_cb_t cb;
+    h3lis331dl_cb_t     cb;
 } h3lis331dl_t;
 
 typedef struct {

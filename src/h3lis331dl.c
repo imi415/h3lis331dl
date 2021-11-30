@@ -72,6 +72,7 @@ typedef enum {
  */
 static h3lis331dl_ret_t h3lis331dl_read_register(h3lis331dl_t *accel, uint8_t reg, uint8_t *data, uint8_t len) {
     if(len > 1) reg |= 0x80; /* !! SUB(7) MUST BE 1 for continuous read */
+
     H3LIS_ERROR_CHECK(accel->cb.i2c_write_cb(accel->user_data, accel->slave_addr, &reg, 0x01));
     H3LIS_ERROR_CHECK(accel->cb.i2c_read_cb(accel->user_data, accel->slave_addr, data, len));
 
@@ -90,6 +91,10 @@ static h3lis331dl_ret_t h3lis331dl_read_register(h3lis331dl_t *accel, uint8_t re
 static h3lis331dl_ret_t h3lis331dl_write_register(h3lis331dl_t *accel, uint8_t reg, uint8_t *data, uint8_t len) {
     uint8_t tx_buf[16];
 
+    /* Assume maximum access length is 16. */
+    if(len > 15) return H3LIS331DL_FAIL;
+
+    /* Copy payload */
     tx_buf[0] = reg;
     for(uint8_t i = 0; i < len; i++) {
         tx_buf[i + 1] = data[i];
